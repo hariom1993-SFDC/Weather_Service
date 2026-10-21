@@ -53,17 +53,7 @@ Here's what each piece does:
 
 ## Setting it up
 
-### What you need
-
-- A Salesforce org (a free Developer Edition is fine)
-- VS Code with the Salesforce Extension Pack
-- A free OpenWeatherMap API key (new keys can take up to a couple of hours to start working)
-
-### Step 1 – Deploy the code
-
-Open this project in VS Code and connect it to your org (Command Palette → _SFDX: Authorize an Org_). Then right-click the **force-app** folder and choose **SFDX: Deploy This Source to Org**.
-
-### Step 2 – Add your API key
+### Step 1 – Add your API key
 
 The key is a secret, so it's added in Setup rather than deployed.
 
@@ -79,7 +69,7 @@ Then create the **Named Credential**. Go to the _Named Credentials_ tab and clic
 2. Set the URL to *https://api.openweathermap.org* and pick the External Credential you just made.
 3. Tick **Enabled for Callouts** and **Allow Formulas in HTTP Header**, then save.
 
-### Step 3 – Put the weather card on the page
+### Step 2 – Put the weather card on the page
 
 Open any Location record, click the gear icon and choose **Edit Page**. Drag **showWeatherLWC** onto the page, save, and activate it as the org default.
 
