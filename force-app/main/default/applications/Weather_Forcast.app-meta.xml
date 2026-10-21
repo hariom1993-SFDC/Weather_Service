@@ -12,8 +12,7 @@
     <isOmniPinnedViewEnabled>false</isOmniPinnedViewEnabled>
     <label>Weather Forcast</label>
     <navType>Standard</navType>
-    <tabs>standard-Location</tabs>
-    <tabs>WeatherInfo__c</tabs>
+    <tabs>Location__c</tabs>
     <uiType>Lightning</uiType>
     <utilityBar>Weather_Forcast_UtilityBar</utilityBar>
 </CustomApplication>

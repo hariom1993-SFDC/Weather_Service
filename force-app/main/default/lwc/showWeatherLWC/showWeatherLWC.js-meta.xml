@@ -1,12 +1,17 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
-	<isExposed>true</isExposed>
-	<apiVersion>68.0</apiVersion>
-	<targets>
-		<target>lightning__AppPage</target>
-		<target>lightning__HomePage</target>
-		<target>lightning__RecordPage</target>
-		<target>lightning__Tab</target>
-		<target>lightning__RecordAction</target>
-	</targets>
+    <apiVersion>62.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>WeatherDisplay</masterLabel>
+    <description>Shows the current weather for a Location and lets the user refresh it.</description>
+    <targets>
+        <target>lightning__RecordPage</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__RecordPage">
+            <objects>
+                <object>Location__c</object>
+            </objects>
+        </targetConfig>
+    </targetConfigs>
 </LightningComponentBundle>
