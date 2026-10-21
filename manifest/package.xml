@@ -1,38 +1,37 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
-    <!-- types>
-        <members>*</members>
+    <types>
+        <members>WeatherService</members>
+        <members>WeatherController</members>
+        <members>WeatherSyncBatch</members>
+        <members>WeatherCalloutMock</members>
+        <members>WeatherServiceTest</members>
+        <members>WeatherSyncBatchTest</members>
         <name>ApexClass</name>
     </types>
     <types>
-        <members>*</members>
-        <name>ApexComponent</name>
-    </types>
-    <types>
-        <members>*</members>
-        <name>ApexTestSuite</name>
-    </types>
-    <types>
-        <members>*</members>
-        <name>ApexTrigger</name>
-    </types>
-    <types>
-        <members>*</members>
-        <name>AuraDefinitionBundle</name>
-    </types>
-    <types>
-        <members>*</members>
+        <members>ShowWeather</members>
         <name>LightningComponentBundle</name>
     </types>
     <types>
-        <members>*</members>
-        <name>StaticResource</name>
-    </types -->
-        <types>
-        <members>WeatherService</members>
-        <members>WeatherController</members>
-
-        <name>ApexClass</name>
+        <members>WeatherAPIExternalCredential</members>
+        <name>NamedCredential</name>
+    </types>
+    <types>
+        <members>WeatherAPIExternalCredential</members> 
+        <name>ExternalCredential</name>
+    </types>
+    <types>
+        <members>Location__c</members>
+        <name>CustomObject</name>
+    </types>
+    <types>
+        <members>WeatherInfo__c</members>
+        <name>CustomObject</name>
+    </types>
+    <types>
+        <members>Weather_Forcast</members> 
+        <name>CustomApplication</name>
     </types>
     <version>67.0</version>
 </Package>
