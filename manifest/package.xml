@@ -10,7 +10,7 @@
         <name>ApexClass</name>
     </types>
     <types>
-        <members>ShowWeather</members>
+        <members>showWeatherLWC</members>
         <name>LightningComponentBundle</name>
     </types>
     <types>

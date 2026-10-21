@@ -1,0 +1,77 @@
+<!--
+  ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+  Component Name  : weatherDisplay
+  Author          : Hariom Bajpai
+  Created Date    : Oct 21, 2026
+  Last Modified By: Hariom Bajpai
+  Last Modified On: Oct 21, 2026
+  Description     : This file is doing the layout of the weather card using SLDS: the "Get Weather Details"
+                    button, a loading spinner, an error alert, the weather panel with icon, temperature,
+                    description and city, three tiles for Feels Like / Min / Max, the last-updated time,
+                    and a friendly message when no weather is stored yet.
+  ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+-->
+<template>
+    <lightning-card title="Current Weather" icon-name="standard:location">
+        <lightning-button
+            slot="actions"
+            label="Get Weather Details"
+            title="Fetch the latest weather from OpenWeatherMap"
+            icon-name="utility:refresh"
+            variant="brand"
+            disabled={isRefreshing}
+            onclick={handleRefresh}
+            data-id="refresh-button"
+        ></lightning-button>
+
+        <div class="slds-is-relative slds-p-horizontal_medium weather-body">
+            <template lwc:if={isBusy}>
+                <lightning-spinner alternative-text="Loading weather" size="small"></lightning-spinner>
+            </template>
+
+            <template lwc:if={error}>
+                <div class="slds-notify slds-notify_alert slds-alert_error slds-m-bottom_small" role="alert" data-id="error">
+                    <span class="slds-assistive-text">Error</span>
+                    <lightning-icon icon-name="utility:error" alternative-text="Error" size="x-small" variant="inverse" class="slds-m-right_x-small"></lightning-icon>
+                    <h2>{error}</h2>
+                </div>
+            </template>
+
+            <template lwc:if={hasWeather}>
+                <div class="weather-hero slds-grid slds-grid_vertical-align-center slds-p-around_medium slds-m-bottom_small" data-id="weather">
+                    <template lwc:if={iconUrl}>
+                        <img src={iconUrl} alt={descriptionLabel} class="weather-icon" />
+                    </template>
+                    <div class="slds-m-left_small">
+                        <p class="weather-temp" data-id="temperature">{temperatureLabel}</p>
+                        <p class="slds-text-heading_small weather-desc" data-id="description">{descriptionLabel}</p>
+                        <p class="slds-text-body_small slds-text-color_weak">{cityLabel}</p>
+                    </div>
+                </div>
+
+                <div class="slds-grid slds-wrap slds-gutters_x-small">
+                    <template for:each={stats} for:item="stat">
+                        <div key={stat.label} class="slds-col slds-size_1-of-3 slds-p-bottom_x-small">
+                            <div class="slds-box slds-box_x-small slds-text-align_center stat-tile">
+                                <p class="slds-text-title_caps">{stat.label}</p>
+                                <p class="slds-text-heading_small slds-m-top_xx-small">{stat.value}</p>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+
+                <p class="slds-text-body_small slds-text-color_weak slds-m-top_x-small slds-p-bottom_small">
+                    Last updated
+                    <lightning-formatted-date-time value={weather.Fetched_At__c} year="numeric" month="short" day="2-digit" hour="2-digit" minute="2-digit" class="slds-m-left_xx-small"></lightning-formatted-date-time>
+                </p>
+            </template>
+            <template lwc:elseif={showEmptyState}>
+                <div class="slds-text-align_center slds-p-vertical_large" data-id="empty">
+                    <lightning-icon icon-name="utility:info" alternative-text="No data" size="small"></lightning-icon>
+                    <p class="slds-text-heading_small slds-m-top_small">No weather data yet</p>
+                    <p class="slds-text-body_small slds-text-color_weak">Click “Get Weather Details” to fetch the current weather for this location.</p>
+                </div>
+            </template>
+        </div>
+    </lightning-card>
+</template>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Valid_Coordinates_OR_City</fullName>
+    <active>true</active>
+    <errorConditionFormula>OR(
+    AND(ISBLANK(Latitude__c), NOT(ISBLANK(Longitude__c))),
+    AND(NOT(ISBLANK(Latitude__c)), ISBLANK(Longitude__c)),
+    Latitude__c &lt; -90,
+    Latitude__c &gt; 90,
+    Longitude__c &lt; -180,
+    Longitude__c &gt; 180
+)</errorConditionFormula>
+    <errorMessage>Please provide valid coordinate OR City</errorMessage>
+</ValidationRule>

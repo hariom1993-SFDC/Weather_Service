@@ -1,16 +1,28 @@
+/**
+ * ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+ * Class Name      : WeatherService
+ * Author          : Hariom Bajpai
+ * Created Date    : Oct 21, 2026
+ * Last Modified By: Oct 21, 2026
+ * Last Modified On: Oct 21, 2026
+ * Description     : This class is doing the core work: for each Location it calls OpenWeatherMap through the 
+ 					Named Credential (using Latitude/Longitude, or the Location Name as the city when coordinates are blank),
+					turns every problem (401, 404, 429, timeout, bad JSON) into a readable message instead of throwing, and 
+					saves the result in WeatherInfo__c with one bulk upsert so each location keeps a single weather row that 
+					is updated, never duplicated.
+ */
 public inherited sharing class WeatherService {
     @TestVisible
     private static final String ENDPOINT = 'callout:WeatherAPIExternalCredential/data/2.5/weather';
     private static final Integer TIMEOUT_MS = 20000;
 
- 
     public static Map<Id, String> refresh(List<Id> locationIds) {
         Map<Id, String> errors = new Map<Id, String>();
         if (locationIds == null || locationIds.isEmpty()) {
             return errors;
         }
         Map<Id, Location__c> locations = new Map<Id, Location__c>(
-            [SELECT Id, Latitude__c, Longitude__c FROM Location__c WHERE Id IN :locationIds]
+            [SELECT Id, Name, Latitude__c, Longitude__c FROM Location__c WHERE Id IN :locationIds]
         );
 
         Map<Id, Id> existingWeatherIds = new Map<Id, Id>();
@@ -26,7 +38,6 @@ public inherited sharing class WeatherService {
         List<Id> rowLocationIds = new List<Id>(); 
         Datetime fetchedAt = System.now();
 
-        
         for (Id locationId : locationIds) {
             Location__c location = locations.get(locationId);
             String error;
@@ -44,7 +55,6 @@ public inherited sharing class WeatherService {
             }
         }
 
-        
         List<Database.UpsertResult> results = Database.upsert(weatherRows, false);
         for (Integer i = 0; i < results.size(); i++) {
             if (!results[i].isSuccess()) {
@@ -53,7 +63,6 @@ public inherited sharing class WeatherService {
         }
         return errors;
     }
-
 
     public static WeatherInfo__c getLatest(Id locationId) {
         if (locationId == null) {
@@ -71,7 +80,6 @@ public inherited sharing class WeatherService {
         return rows.isEmpty() ? null : rows[0];
     }
 
-
     @TestVisible
     private static String fetch(
         Location__c location,
@@ -79,14 +87,22 @@ public inherited sharing class WeatherService {
         List<WeatherInfo__c> weatherRows,
         Datetime fetchedAt
     ) {
+        String query;
         Decimal lat = location.Latitude__c;
         Decimal lon = location.Longitude__c;
-        if (lat == null || lon == null || Math.abs(lat) > 90 || Math.abs(lon) > 180) {
-            return 'A valid Latitude (-90 to 90) and Longitude (-180 to 180) are required.';
+        if (lat != null && lon != null) {
+            if (Math.abs(lat) > 90 || Math.abs(lon) > 180) {
+                return 'Latitude must be between -90 and 90 and Longitude between -180 and 180.';
+            }
+            query = 'lat=' + lat.toPlainString() + '&lon=' + lon.toPlainString();
+        } else if (String.isNotBlank(location.Name)) {
+            query = 'q=' + EncodingUtil.urlEncode(location.Name.trim(), 'UTF-8');
+        } else {
+            return 'Enter Latitude and Longitude, or a city name as the Location Name.';
         }
 
         HttpRequest request = new HttpRequest();
-        request.setEndpoint(ENDPOINT + '?lat=' + lat.toPlainString() + '&lon=' + lon.toPlainString() + '&units=metric');
+        request.setEndpoint(ENDPOINT + '?' + query + '&units=metric');
         request.setMethod('GET');
         request.setTimeout(TIMEOUT_MS);
 
@@ -100,6 +116,9 @@ public inherited sharing class WeatherService {
         Integer status = response.getStatusCode();
         if (status == 401) {
             return 'Weather service rejected the API key (401). Check the External Credential "WeatherAPIExternalCredential".';
+        }
+        if (status == 404) {
+            return 'The weather service could not find this location (404). Check the city name or coordinates.';
         }
         if (status == 429) {
             return 'Weather service rate limit reached (429). Please try again later.';

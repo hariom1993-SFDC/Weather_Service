@@ -1,0 +1,41 @@
+/*
+ * ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+ * Component Name  : weatherDisplay
+ * Author          : Hariom Bajpai
+ * Created Date    : Oct 21, 2026
+ * Last Modified By: Hariom Bajpai
+ * Last Modified On: Oct 21, 2026
+ * Description     : This file is doing the extra styling on top of SLDS: the blue gradient weather panel,
+ *                   the large temperature text, the weather icon size and the rounded stat tiles.
+ * ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――
+ */
+.weather-body {
+    min-height: 6rem;
+}
+
+.weather-hero {
+    border-radius: 0.75rem;
+    background: linear-gradient(135deg, #d8edff 0%, #f3f8ff 100%);
+    color: #032d60;
+}
+
+.weather-icon {
+    width: 80px;
+    height: 80px;
+    flex-shrink: 0;
+}
+
+.weather-temp {
+    font-size: 2.5rem;
+    font-weight: 300;
+    line-height: 1.1;
+}
+
+.weather-desc {
+    font-weight: 600;
+}
+
+.stat-tile {
+    height: 100%;
+    border-radius: 0.5rem;
+}
